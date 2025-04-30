@@ -28,5 +28,7 @@ def exampleData():
     return sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
 
 
+
+
 if __name__ == "__main__":
     print(exampleData())
