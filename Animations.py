@@ -3,18 +3,59 @@ import numpy as np
 from itertools import combinations
 from shapely.geometry import Point
 
+rng = np.random.default_rng(seed=2)
+
+
+def sampleCirc(center: tuple, rad: float, var: float, count:int) -> list:
+    """circulally sample points with noise
+
+    Args:
+        center (tuple): x,y coordinat of the center of the circle
+        rad (float): radius
+        var (float): standard deviation 
+        count (int): number of points
+
+    Returns:
+        list: list of points, each as an array
+    """
+    t_sampled = 2*np.pi*rng.random(count)
+    x_sampled = rad * np.cos(t_sampled) + rng.normal(scale=var, size=count) + center[0]
+    y_sampled = rad * np.sin(t_sampled) + rng.normal(scale=var, size=count) + center[1]
+
+    points_array = np.column_stack((x_sampled, y_sampled, np.zeros(count)))
+    points = [points_array[p] for p in range(count)]
+
+    return points
+
+
+
+
+class DrawPoints(Scene):
+    def construct(self):
+        points = sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
+
+
+        # --- Dots (0-simplices) ---
+        dots = [Dot(p, color=BLUE) for p in points]
+        self.add(*[dot for dot in dots])
+
 class CechComplex(Scene):
     def construct(self):
         # --- Irregular, more spaced-out points ---
-        points = [
-            np.array([-3.1, -1.8, 0]),
-            np.array([1.2, 2.1, 0]),
-            np.array([3.7, -2.3, 0]),
-            np.array([-0.5, -3.2, 0]),
-            np.array([-4.5, 2.5, 0])
-        ]
+        # points = [
+        #     np.array([-3.1, -1.8, 0]),
+        #     np.array([1.2, 2.1, 0]),
+        #     np.array([3.7, -2.3, 0]),
+        #     np.array([-0.5, -3.2, 0]),
+        #     np.array([-4.5, 2.5, 0]),
+        #     np.array([-4.5, 2, 0])
+        # ]
 
-        max_radius = 3
+        points = sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
+
+
+       
+        max_radius = 1.5
         radius_step = 0.05
         current_radius = 0.1
 
@@ -23,12 +64,12 @@ class CechComplex(Scene):
         self.play(*[FadeIn(dot) for dot in dots])
 
         # --- Labels ---
-        labels = []
-        for i, p in enumerate(points):
-            label = Text(chr(65 + i), font_size=24)
-            label.next_to(p, UP, buff=0.2)
-            labels.append(label)
-        self.play(*[Write(label) for label in labels])
+        # labels = []
+        # for i, p in enumerate(points):
+        #     label = Text(chr(65 + i), font_size=24)
+        #     label.next_to(p, UP, buff=0.2)
+        #     labels.append(label)
+        # self.play(*[Write(label) for label in labels])
 
         # --- Circles (balls) ---
         circles = [
@@ -103,11 +144,11 @@ class CechComplex(Scene):
 
             # Pause to show new simplex creation
             if new_simplices:
-                self.wait(0.1)
-                self.play(*[Create(s) for s in new_simplices], run_time=0.4)
+                self.wait(1/60)
+                self.play(*[Create(s) for s in new_simplices], run_time=(1/60))
+                # self.add(*[s for s in new_simplices])
 
         self.wait(1)
 
 
 
-        
