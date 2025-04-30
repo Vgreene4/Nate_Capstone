@@ -2,39 +2,13 @@ from manim import *
 import numpy as np
 from itertools import combinations
 from shapely.geometry import Point
-
-rng = np.random.default_rng(seed=2)
-
-
-def sampleCirc(center: tuple, rad: float, var: float, count:int) -> list:
-    """circulally sample points with noise
-
-    Args:
-        center (tuple): x,y coordinat of the center of the circle
-        rad (float): radius
-        var (float): standard deviation 
-        count (int): number of points
-
-    Returns:
-        list: list of points, each as an array
-    """
-    t_sampled = 2*np.pi*rng.random(count)
-    x_sampled = rad * np.cos(t_sampled) + rng.normal(scale=var, size=count) + center[0]
-    y_sampled = rad * np.sin(t_sampled) + rng.normal(scale=var, size=count) + center[1]
-
-    points_array = np.column_stack((x_sampled, y_sampled, np.zeros(count)))
-    points = [points_array[p] for p in range(count)]
-
-    return points
-
+import sampleData
 
 
 
 class DrawPoints(Scene):
     def construct(self):
-        points = sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
-
-
+        points = sampleData.exampleData()
         # --- Dots (0-simplices) ---
         dots = [Dot(p, color=BLUE) for p in points]
         self.add(*[dot for dot in dots])
@@ -51,7 +25,7 @@ class CechComplex(Scene):
         #     np.array([-4.5, 2, 0])
         # ]
 
-        points = sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
+        points = sampleData.exampleData()
 
 
        
