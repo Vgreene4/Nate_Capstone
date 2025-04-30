@@ -55,7 +55,7 @@ class CechComplex(Scene):
 
 
        
-        max_radius = 1.5
+        max_radius = 1
         radius_step = 0.05
         current_radius = 0.1
 
