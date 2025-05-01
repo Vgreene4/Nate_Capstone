@@ -1,2 +1,2 @@
 #!/bin/sh
-python -m manim -pqh Animations.py $1
+python -m manim -pql Animations.py $1

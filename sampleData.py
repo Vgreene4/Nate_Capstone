@@ -1,6 +1,6 @@
 import numpy as np
 
-rng = np.random.default_rng(seed=2)
+rng = np.random.default_rng(seed=67)
 
 
 def sampleCirc(center: tuple, rad: float, var: float, count:int) -> list:
@@ -25,7 +25,7 @@ def sampleCirc(center: tuple, rad: float, var: float, count:int) -> list:
     return points
 
 def exampleData():
-    return sampleCirc((2, 0), 1.25, 0.2, 25) + sampleCirc((-2,0), 2.5, 0.5, 25)
+    return sampleCirc((2, 0), 1.25, .2, 25) + sampleCirc((-2,0), 2.5, .2, 25)
 
 
 

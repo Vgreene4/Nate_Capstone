@@ -3,6 +3,7 @@ from ripser import ripser
 from persim import plot_diagrams
 from sklearn import datasets
 import matplotlib.pyplot as plt
+import math
 
 rng = np.random.default_rng(seed=67)
 
@@ -43,21 +44,29 @@ def check_points(points):
     plt.scatter(x_points, y_points)
     plt.show()
 
-check_points(points)
+# check_points(points)
 
 dgms = ripser(np.array(points), coeff = 2)['dgms']
 
 H_0 = dgms[0]
 H_1 = dgms[1]
 
+# print(H_0)
+# print(H_1)
+
 def plot_barcode(barcodes, dim):
+    # plt.figure(figsize=(6,2))
     for i, bar in enumerate(barcodes):
         y = [i] #where the bar will be drawn
 
         left = bar[0] #where the bar is born
-        width = [bar[1] - bar[0]] #width of the bar
 
-        plt.barh(y, width, left = left, height = .5, color = "black")
+        if not math.isinf(bar[1]):  
+            width = [bar[1] - bar[0]] #width of the bar
+        else:
+            width = [4.14756489-bar[0]] # max size of H1
+
+        plt.barh(y, width, left = left, height = .7, color = "black")
 
     plt.title("Persistence Barcodes" + " " + dim)
     plt.xlim(0)
@@ -65,6 +74,8 @@ def plot_barcode(barcodes, dim):
     plt.ylabel("Features")
     plt.yticks([])
     plt.tight_layout()
+    plt.savefig('H_0.png')
     plt.show()
 
-plot_barcode(H_1, "in H_1")
+plot_barcode(H_0, "In H_0")
+# plot_barcode(H_1, "in H_1")
